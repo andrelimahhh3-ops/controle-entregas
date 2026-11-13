@@ -1,0 +1,2 @@
+V14.8.0 — Histórico de rotas GPS e layout refinado
+Todas as funções, buscas, relatórios e backups anteriores foram preservados. A nova tela Histórico de rotas mostra o trajeto real por dia, semana, mês ou período específico, com filtro por entregador, mapa consolidado e abertura no Google Maps. Os pontos ficam salvos offline e sincronizam depois.
