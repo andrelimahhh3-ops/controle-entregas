@@ -1,12 +1,13 @@
 import { ensureSeed, saveAutoBackup, enableWriteThroughAutoBackup } from './db.js?v=5.22';
 import { $, $$, toast, initTooltips, animateStatCards, performanceProfile } from './helpers.js?v=5.22';
-import * as V from './views.js?v=5.22';
+import * as V from './views.js?v=5.23';
 
 let currentView = 'central';
 let currentRegistryTab = 'vehicles';
 let environment = localStorage.getItem('orbita_env') || 'real';
 let operatorName = localStorage.getItem('orbita_operator') || '';
 let operatorRole = localStorage.getItem('orbita_operator_role') || 'Administrador';
+const SIDEBAR_PREF_KEY = 'orbita_sidebar_collapsed';
 
 export function getEnv() { return environment; }
 export function getOperatorName() { return operatorName; }
@@ -59,6 +60,7 @@ async function startApp() {
   $('#appShell').classList.remove('hidden');
   renderEnvPill();
   wireNav();
+  wireSidebar();
   wireGlobalActions();
   await V.normalizeReturnQueueStatus?.();
   enableWriteThroughAutoBackup();
@@ -98,6 +100,12 @@ function renderEnvPill() {
   $('#envPill').classList.toggle('treino', environment === 'treino');
   const shownRole = readOnly ? 'Consulta / Monitor' : operatorRole;
   $('#operatorLabel').textContent = operatorName ? `👤 ${operatorName} · ${shownRole}` : 'Quem está operando?';
+  const operatorBtn = $('#operatorBtn');
+  if (operatorBtn) {
+    const operatorAccessibleLabel = operatorName ? `Operador atual: ${operatorName} · ${shownRole}. Clique para trocar.` : 'Selecionar operador';
+    operatorBtn.setAttribute('aria-label', operatorAccessibleLabel);
+    operatorBtn.title = operatorAccessibleLabel;
+  }
   document.body.dataset.operatorRole=roleKey();
   $$('.nav-item[data-view]').forEach((btn)=>btn.classList.toggle('role-hidden',!canAccessView(btn.dataset.view)));
   $('#newDeliveryBtn')?.classList.toggle('role-hidden',!canPerform('delivery_edit'));
@@ -105,9 +113,63 @@ function renderEnvPill() {
   const envBtn = $('#envToggleBtn');
   if (envBtn) {
     envBtn.disabled = readOnly;
-    envBtn.title = readOnly ? 'Perfil Consulta / Monitor acompanha somente a Operação Real.' : '';
+    envBtn.title = readOnly ? 'Perfil Consulta / Monitor acompanha somente a Operação Real.' : 'Alternar entre Operação Real e Treinamento.';
+    envBtn.setAttribute('aria-label', envBtn.title);
     envBtn.classList.toggle('monitor-locked', readOnly);
   }
+}
+
+function setMobileMenuOpen(open) {
+  const isOpen = Boolean(open);
+  $('#sidebar').classList.toggle('open', isOpen);
+  const menuBtn = $('#menuBtn');
+  if (menuBtn) {
+    menuBtn.setAttribute('aria-expanded', String(isOpen));
+    const label = isOpen ? 'Fechar menu de navegação' : 'Abrir menu de navegação';
+    menuBtn.setAttribute('aria-label', label);
+    menuBtn.title = label;
+  }
+}
+
+function setSidebarCollapsed(collapsed, persist = false) {
+  const shell = $('#appShell');
+  const button = $('#sidebarToggleBtn');
+  if (!shell || !button) return;
+
+  const isCollapsed = Boolean(collapsed);
+  shell.classList.toggle('sidebar-collapsed', isCollapsed);
+  const label = isCollapsed ? 'Expandir menu lateral' : 'Recolher menu lateral';
+  button.setAttribute('aria-expanded', String(!isCollapsed));
+  button.setAttribute('aria-label', label);
+  button.title = label;
+  const icon = $('#sidebarToggleIcon');
+  if (icon) icon.textContent = isCollapsed ? '›' : '‹';
+
+  $$('.nav-item[data-view]').forEach((item) => {
+    const itemLabel = item.querySelector(':scope > span:not(.ico):not(.badge)')?.textContent.trim();
+    if (itemLabel) {
+      item.setAttribute('aria-label', itemLabel);
+      item.title = itemLabel;
+    }
+  });
+
+  if (persist) {
+    try { localStorage.setItem(SIDEBAR_PREF_KEY, isCollapsed ? 'true' : 'false'); } catch {}
+  }
+}
+
+function wireSidebar() {
+  let isCollapsed = false;
+  try { isCollapsed = localStorage.getItem(SIDEBAR_PREF_KEY) === 'true'; } catch {}
+  setSidebarCollapsed(isCollapsed);
+
+  $('#sidebarToggleBtn')?.addEventListener('click', () => {
+    setSidebarCollapsed(!$('#appShell').classList.contains('sidebar-collapsed'), true);
+  });
+
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 720) setMobileMenuOpen(false);
+  }, { passive: true });
 }
 
 function wireNav() {
@@ -116,11 +178,13 @@ function wireNav() {
       if(!canAccessView(btn.dataset.view))return toast('Seu perfil não possui acesso a esta área.','error');
       currentView = btn.dataset.view;
       $$('.nav-item[data-view]').forEach((b) => b.classList.toggle('active', b === btn));
-      $('#sidebar').classList.remove('open');
+      setMobileMenuOpen(false);
       render();
     });
   });
-  $('#menuBtn').addEventListener('click', () => $('#sidebar').classList.toggle('open'));
+  $('#menuBtn')?.addEventListener('click', () => {
+    setMobileMenuOpen(!$('#sidebar').classList.contains('open'));
+  });
   $('#envToggleBtn').addEventListener('click', () => {
     if (roleKey() === 'consulta') return toast('Perfil Consulta / Monitor acompanha somente a Operação Real.', '');
     environment = environment === 'real' ? 'treino' : 'real';
@@ -429,7 +493,7 @@ if ('serviceWorker' in navigator) {
     refreshingForUpdate = true;
     window.location.reload();
   });
-  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?build=20261104-v5.21-fundo-orbital', { updateViaCache: 'none' }).then((registration) => registration.update()).catch(() => {}));
+  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js?build=20261113-v5.23-sidebar-compacta', { updateViaCache: 'none' }).then((registration) => registration.update()).catch(() => {}));
 }
 
 boot();

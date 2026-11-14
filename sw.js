@@ -1,7 +1,7 @@
-const CACHE_PREFIX = 'orbita-v522-roteirizacao-';
+const CACHE_PREFIX = 'orbita-v523-sidebar-compacta-';
 const CACHE = `${CACHE_PREFIX}1`;
 const ASSETS = [
-  './', './index.html', './styles.css?v=5.22', './app.js?v=5.22', './db.js?v=5.22', './helpers.js?v=5.22', './views.js?v=5.22', './excel-report.js?v=5.22', './manifest.webmanifest?v=5.22',
+  './', './index.html', './styles.css?v=5.23', './app.js?v=5.23', './db.js?v=5.22', './helpers.js?v=5.22', './views.js?v=5.23', './excel-report.js?v=5.22', './manifest.webmanifest?v=5.23',
   './assets/brand/nilo-logo.png', './assets/brand/mascote.png', './assets/brand/triela-logo.png',
   './icons/icon-192.png', './icons/icon-512.png',
 ];

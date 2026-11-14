@@ -6,8 +6,8 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
 <meta name="theme-color" content="#0B2A4A" />
 <meta name="description" content="Órbita — controle de entregas completo, offline-first e instalável." />
-<link rel="manifest" href="manifest.webmanifest?v=5.22" />
-<link rel="stylesheet" href="styles.css?v=5.22" />
+<link rel="manifest" href="manifest.webmanifest?v=5.23" />
+<link rel="stylesheet" href="styles.css?v=5.23" />
 <title>Órbita • Controle de Entregas</title>
 </head>
 <body>
@@ -25,15 +25,22 @@
     <aside class="sidebar" id="sidebar">
       <div>
         <div class="brand-logo-chip"><img src="assets/brand/nilo-logo.png" alt="Nilo Supermercado" onerror="this.replaceWith(Object.assign(document.createElement('strong'),{textContent:'NILO',style:'font-size:20px;color:#0B2A4A'}))" /></div>
+        <span class="sidebar-collapsed-mark" aria-hidden="true">Ó</span>
         <div class="brand-slogan">"No quieto, no quieto,<br>o Nilo vende mais barato"</div>
-        <div class="release-side">VERSÃO 5.22 · ROTEIRIZAÇÃO POR CICLO</div>
+        <div class="release-side">VERSÃO 5.23 · MENU COMPACTÁVEL</div>
       </div>
 
+      <button class="sidebar-toggle" id="sidebarToggleBtn" type="button" aria-controls="sidebar" aria-expanded="true" aria-label="Recolher menu lateral" title="Recolher menu lateral">
+        <span class="sidebar-toggle-icon" id="sidebarToggleIcon" aria-hidden="true">‹</span>
+        <span class="sidebar-toggle-label">Recolher menu</span>
+      </button>
       <button class="conn-pill" id="envToggleBtn" style="border:none;cursor:pointer;text-align:left">
+        <span class="sidebar-compact-icon" aria-hidden="true">↔</span>
         <span class="conn-dot online" id="envDot"></span>
         <span id="envPill">● Operação Real</span>
       </button>
       <button class="conn-pill" id="operatorBtn" style="border:none;cursor:pointer;text-align:left">
+        <span class="sidebar-compact-icon" aria-hidden="true">👤</span>
         <span class="conn-dot online"></span>
         <span id="operatorLabel">Quem está operando?</span>
       </button>
@@ -59,7 +66,7 @@
         <button class="nav-item" data-view="settings"><span class="ico">⚙️</span><span>Configurações</span></button>
       </nav>
 
-      <button class="mini" id="installBtn" hidden style="background:rgba(255,255,255,.08);color:#fff;padding:8px;border-radius:8px;font-size:12px">⇩ Instalar aplicativo</button>
+      <button class="mini" id="installBtn" type="button" aria-label="Instalar aplicativo" title="Instalar aplicativo" hidden style="background:rgba(255,255,255,.08);color:#fff;padding:8px;border-radius:8px;font-size:12px"><span class="sidebar-install-icon" aria-hidden="true">⇩</span><span class="sidebar-install-label">Instalar aplicativo</span></button>
 
       <div class="dev-footer">
         <img src="assets/brand/triela-logo.png" alt="Triela Soluções" onerror="this.style.display='none'" />
@@ -152,7 +159,7 @@
       <header class="topbar topbar-spotlight">
         <div class="topbar-main-row">
           <div class="topbar-title-wrap">
-            <button class="menu-btn" id="menuBtn">☰</button>
+            <button class="menu-btn" id="menuBtn" type="button" aria-controls="sidebar" aria-expanded="false" aria-label="Abrir menu de navegação" title="Abrir menu de navegação">☰</button>
             <div class="topbar-title-block">
               <span class="topbar-kicker">CENTRAL OPERACIONAL</span>
               <h1 id="viewTitle">Central Operacional</h1>
@@ -161,7 +168,7 @@
           </div>
           <div class="topbar-actions">
             <div class="live-clock utility-pill" id="liveClock"><span class="pulse-dot"></span><span id="liveClockText">--:--:--</span></div>
-            <span class="release-badge utility-pill">v5.22</span>
+            <span class="release-badge utility-pill">v5.23</span>
             <span class="monitor-mode-badge hidden" id="monitorModeBadge">👁 SOMENTE LEITURA</span>
             <button class="btn-primary topbar-cta" id="newDeliveryBtn">＋ Registrar entrega</button>
           </div>
@@ -203,6 +210,6 @@
 
   <div class="toast-stack" id="toastStack"></div>
 
-  <script type="module" src="app.js?v=5.22"></script>
+  <script type="module" src="app.js?v=5.23"></script>
 </body>
 </html>

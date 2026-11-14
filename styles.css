@@ -136,6 +136,48 @@ nav.main-nav { display: flex; flex-direction: column; gap: 2px; flex: 1; overflo
 .nav-item.soon { opacity: .45; cursor: default; }
 .nav-item.soon .badge { background: rgba(255,255,255,.08); font-weight: 700; }
 
+.sidebar-toggle {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 40px; padding: 8px 10px; border: 1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.08); color: #fff; text-align: left; font-size: 11px;
+}
+.sidebar-toggle:hover { background: rgba(255,255,255,.14); }
+.sidebar-toggle-icon { display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 7px; background: rgba(255,255,255,.12); font-size: 18px; line-height: 1; }
+.sidebar-compact-icon, .sidebar-collapsed-mark { display: none; }
+
+@media (min-width: 721px) {
+  .sidebar { transition: width .2s ease, padding .2s ease; }
+  .shell.sidebar-collapsed { --sidebar-w: 76px; }
+  .sidebar-collapsed .sidebar { padding-right: 12px; padding-left: 12px; gap: 14px; }
+  .sidebar-collapsed .brand-logo-chip,
+  .sidebar-collapsed .brand-slogan,
+  .sidebar-collapsed .release-side,
+  .sidebar-collapsed .dev-footer { display: none; }
+  .sidebar-collapsed .sidebar-collapsed-mark {
+    display: grid; place-items: center; width: 44px; height: 44px; margin: 0 auto;
+    border-radius: 12px; background: var(--accent); color: var(--accent-ink);
+    font-size: 25px; font-weight: 900; line-height: 1;
+  }
+  .sidebar-collapsed .sidebar-toggle { width: 100%; min-width: 0; padding: 6px 0; }
+  .sidebar-collapsed .sidebar-toggle-label,
+  .sidebar-collapsed .conn-pill > span:not(.conn-dot):not(.sidebar-compact-icon),
+  .sidebar-collapsed .nav-item > span:not(.ico):not(.badge),
+  .sidebar-collapsed #installBtn .sidebar-install-label,
+  .sidebar-collapsed .nav-group-label {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+  }
+  .sidebar-collapsed .sidebar-toggle-icon { width: 32px; height: 32px; }
+  .sidebar-collapsed .conn-pill { width: 44px; height: 40px; align-self: center; justify-content: center; padding: 0; }
+  .sidebar-collapsed .sidebar-compact-icon { display: grid; place-items: center; width: 24px; height: 24px; font-size: 16px; }
+  .sidebar-collapsed #envToggleBtn .conn-dot,
+  .sidebar-collapsed #operatorBtn .conn-dot { display: none; }
+  .sidebar-collapsed .nav-item { position: relative; justify-content: center; gap: 0; min-height: 42px; padding: 5px 0; }
+  .sidebar-collapsed .nav-item .ico { width: 32px; height: 32px; }
+  .sidebar-collapsed .nav-item .badge { position: absolute; top: 1px; right: 1px; min-width: 15px; height: 15px; display: grid; place-items: center; margin: 0; padding: 0 3px; font-size: 8px; line-height: 1; }
+  .sidebar-collapsed #installBtn:not([hidden]) { display: grid; place-items: center; align-self: center; width: 44px; height: 40px; padding: 0 !important; font-size: 18px !important; }
+}
+
 .main {
   flex: 1;
   min-width: 0;
@@ -688,6 +730,7 @@ tr:last-child td { border-bottom: none; }
 @media (max-width: 720px) {
   .sidebar { position: fixed; z-index: 30; height: 100%; transform: translateX(-100%); transition: transform .2s ease; }
   .sidebar.open { transform: translateX(0); }
+  .sidebar-toggle { display: none; }
   .menu-btn { display: inline-flex; }
   .board { grid-template-columns: 1fr; }
   .field-row { grid-template-columns: 1fr; }
